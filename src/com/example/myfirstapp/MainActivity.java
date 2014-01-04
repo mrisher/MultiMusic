@@ -1,8 +1,5 @@
 package com.example.myfirstapp;
 
-import java.util.HashMap;
-import java.util.Stack;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +16,8 @@ public class MainActivity extends Activity {
 
 	public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 	boolean loaded = false;
-	private HashMap<String, Integer> soundIds = new HashMap<String, Integer>();
+	int soundID = -1;
+	int soundID2 = -1;
 	private static SoundPool soundPool;
 	
     @Override
@@ -27,15 +25,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
-		@Override
-		public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-	    	Log.e("Test", "Loaded sound " + sampleId);
-
-		}
-	});
-        soundIds.put("drum", soundPool.load(this, R.raw.drum, 1));
-        soundIds.put("tone", soundPool.load(this, R.raw.tone, 1));
+        soundID = soundPool.load(this, R.raw.drum, 1);
+        soundID2 = soundPool.load(this, R.raw.tone, 1);
         
         setContentView(R.layout.activity_main);
     }
@@ -56,20 +47,26 @@ public class MainActivity extends Activity {
 		float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		float volume = streamVolumeCurrent / streamVolumeMax;
 
-		Log.e("Test", "Played tone:" + soundIds.get("tone").toString());
-    	soundPool.play(soundIds.get("tone"), 1.0f, 1.0f, 1, -1, 1f);
+    	soundPool.play(soundID2, 1.0f, 1.0f, 1, -1, 1f);
     }
     
     public void drumsClick(View view) {
+    	Intent intent = new Intent(this, DisplayMessageActivity.class);
+    	//EditText editText = (EditText) findViewById(R.id.edit_message);
+    	//String message = editText.getText().toString();
+    	//intent.putExtra(EXTRA_MESSAGE, message);
+    	
+		
 		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		
 		AudioManager mgr = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 		float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
 		float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		float volume = streamVolumeCurrent / streamVolumeMax;
 
-		Log.e("Test", "Played tone:" + soundIds.get("drum").toString());
-		soundPool.play(soundIds.get("drum"), 1.0f, 1.0f, 1, -1, 1f);
-    	
+    	soundPool.play(soundID, 1.0f, 1.0f, 1, -1, 1f);
+    	soundPool.play(soundID2, 1.0f, 1.0f, 1, -1, 1f);
+    	Log.e("Test", "Played sound");
     	
 //		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
 //			@Override
