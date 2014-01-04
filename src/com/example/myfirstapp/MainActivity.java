@@ -1,7 +1,6 @@
 package com.example.myfirstapp;
 
 import java.util.HashMap;
-import java.util.Stack;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,13 +12,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 public class MainActivity extends Activity {
 
 	public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 	boolean loaded = false;
-	private HashMap<String, Integer> soundIds = new HashMap<String, Integer>();
+	private HashMap<Integer, String> pendingSamples = new HashMap<Integer, String>();
+	private HashMap<String, Integer> loadedSamples = new HashMap<String, Integer>();
 	private static SoundPool soundPool;
 	
     @Override
@@ -31,13 +33,36 @@ public class MainActivity extends Activity {
 		@Override
 		public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
 	    	Log.e("Test", "Loaded sound " + sampleId);
-
+	    	loadedSamples.put(pendingSamples.get(sampleId), sampleId);
 		}
 	});
-        soundIds.put("drum", soundPool.load(this, R.raw.drum, 1));
-        soundIds.put("tone", soundPool.load(this, R.raw.tone, 1));
+	
+		pendingSamples.put(soundPool.load(this, R.raw.guitar_riff, 1), "guitar");
+		pendingSamples.put(soundPool.load(this, R.raw.basic_drums, 1), "drum");
+		
+		
+		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		AudioManager mgr = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+		float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+		float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		float volume = streamVolumeCurrent / streamVolumeMax;
         
-        setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main);
+        
+//        Button guitarButton = new Button(this);
+//        guitarButton.setText("Guitar");
+//        guitarButton.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View arg0) {
+//				Log.e("Test", "Played tone from guitar handler:" + loadedSamples.get("tone").toString());
+//		    	soundPool.play(loadedSamples.get("tone"), 1.0f, 1.0f, 1, -1, 1f);
+//			}
+//		});
+//        
+//        LinearLayout thisLayout = (LinearLayout) findViewById(R.layout.activity_main);
+//        thisLayout.addView(guitarButton);
+        
+       // setContentView(thisLayout);
     }
 
 
@@ -49,48 +74,14 @@ public class MainActivity extends Activity {
     }
     
     public void toneClick(View view) {
-		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		
-		AudioManager mgr = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-		float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
-		float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		float volume = streamVolumeCurrent / streamVolumeMax;
-
-		Log.e("Test", "Played tone:" + soundIds.get("tone").toString());
-    	soundPool.play(soundIds.get("tone"), 1.0f, 1.0f, 1, -1, 1f);
+		Log.e("Test", "Played tone:" + loadedSamples.get("guitar").toString());
+    	soundPool.play(loadedSamples.get("guitar"), 1.0f, 1.0f, 1, -1, 1f);
     }
     
     public void drumsClick(View view) {
-		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		AudioManager mgr = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-		float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
-		float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		float volume = streamVolumeCurrent / streamVolumeMax;
-
-		Log.e("Test", "Played tone:" + soundIds.get("drum").toString());
-		soundPool.play(soundIds.get("drum"), 1.0f, 1.0f, 1, -1, 1f);
+		Log.e("Test", "Played tone:" + loadedSamples.get("drum").toString());
+		soundPool.play(loadedSamples.get("drum"), 1.0f, 1.0f, 1, -1, 1f);
     	
-    	
-//		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
-//			@Override
-//			public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-//				loaded = true;
-//				AudioManager mgr = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-//				float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
-//				float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-//				float volume = streamVolumeCurrent / streamVolumeMax;
-//
-//		    	soundPool.play(sampleId, 1.0f, 1.0f, 1, -1, 1f);
-//		    	Log.e("Test", "Played sound");
-//
-//			}
-//		});
-		//int soundID = soundPool.load(this, R.raw.tone, 1);
-		//int soundID = soundPool.load(this, R.raw.drum, 1);
-//		MediaPlayer mp = MediaPlayer.create(this, R.raw.drum);
-//		mp.start();
-	    
-    	//startActivity(intent);
     }
     
 }

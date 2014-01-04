@@ -35,8 +35,11 @@ public final class R {
         public static final int main=0x7f080001;
     }
     public static final class raw {
-        public static final int drum=0x7f040000;
-        public static final int tone=0x7f040001;
+        public static final int basic_drums=0x7f040000;
+        public static final int drum=0x7f040001;
+        public static final int guitar_riff=0x7f040002;
+        public static final int guitar_wah=0x7f040003;
+        public static final int tone=0x7f040004;
     }
     public static final class string {
         public static final int action_settings=0x7f060001;
