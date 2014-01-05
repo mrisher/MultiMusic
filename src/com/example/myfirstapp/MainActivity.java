@@ -22,6 +22,7 @@ public class MainActivity extends Activity {
 	boolean loaded = false;
 	private HashMap<Integer, String> pendingSamples = new HashMap<Integer, String>();
 	private HashMap<String, Integer> loadedSamples = new HashMap<String, Integer>();
+	private HashMap<String, Integer> streamVolumes = new HashMap<String, Integer>();
 	private static SoundPool soundPool;
 	
     @Override
@@ -37,7 +38,7 @@ public class MainActivity extends Activity {
 		}
 	});
 	
-		pendingSamples.put(soundPool.load(this, R.raw.guitar_riff, 1), "guitar");
+		pendingSamples.put(soundPool.load(this, R.raw.basic_drums, 1), "guitar");
 		pendingSamples.put(soundPool.load(this, R.raw.basic_drums, 1), "drum");
 		
 		
@@ -75,13 +76,17 @@ public class MainActivity extends Activity {
     
     public void toneClick(View view) {
 		Log.e("Test", "Played tone:" + loadedSamples.get("guitar").toString());
-    	soundPool.play(loadedSamples.get("guitar"), 1.0f, 1.0f, 1, -1, 1f);
+		soundPool.setVolume(streamVolumes.get("guitar"), 1.0f, 1.0f);
     }
     
     public void drumsClick(View view) {
 		Log.e("Test", "Played tone:" + loadedSamples.get("drum").toString());
-		soundPool.play(loadedSamples.get("drum"), 1.0f, 1.0f, 1, -1, 1f);
-    	
+		//streamVolumes.put("drum", soundPool.play(loadedSamples.get("drum"), 1.0f, 1.0f, 1, -1, 1f));
     }
     
+    public void startClick(View view) {
+    	Log.e("Test", "Starting samples");
+		streamVolumes.put("drum", soundPool.play(loadedSamples.get("drum"), 1.0f, 1.0f, 1, -1, 1f));
+		streamVolumes.put("guitar", soundPool.play(loadedSamples.get("guitar"), 0f, 0f, 1, -1, 1f));
+    }
 }

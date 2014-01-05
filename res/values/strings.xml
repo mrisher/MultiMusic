@@ -6,6 +6,7 @@
     <string name="edit_message">Enter a message.</string>
     <string name="button_send">Send</string>
     <string name="button_drums">Drums</string>
+    <string name="button_start">Start Them</string>
     <string name="button_tone">Tone</string>
     <string name="title_activity_display_message">My Message</string>
     <string name="hello_world">Hello world!</string>
